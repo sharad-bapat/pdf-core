@@ -34,7 +34,7 @@ The code is where-are-the-regions' copy, the most recent of the three, moved wit
 | Tool | Files | Output |
 |---|---|---|
 | where-are-the-regions | 1,113 (its constructed tune and held-out sets, govdocs1 003 and 004) | page map and image kinds identical |
-| wordbox | the same 1,113 | words and glyphs identical |
+| wordbox | 2,254: its 659 dev, 242 held-out and 240 garble files, and the same 1,113 | words and glyphs identical |
 | scan-or-text | 1,791 (its 525 routing files, its 153 constructed and sample files, and the 1,113) | page labels identical |
 
 The copies weren't quite the same. wordbox and scan-or-text still decoded streams in one function, which where-are-the-regions had split in two to leave image codecs for the caller; with the image option off it's the same code. scan-or-text unpacked object streams in hash-map order, which changes from run to run, where pdf-core goes in file order; the "later wins" rule gave the same objects either way on every file above. scan-or-text also stopped the page walk at 500 pages. pdf-core goes to 2,000, and scan-or-text now cuts its own list at 500.
