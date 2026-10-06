@@ -14,3 +14,5 @@ miniz_oxide = "0.8"
 # Decryption of PDFs that open with an empty user password (standard handler R2-R4: RC4, AES-128).
 md-5 = "0.10"
 aes = "0.8"
+# Glyph outlines from embedded TrueType and CFF programs, for ink boxes. Pinned.
+ttf-parser = { version = "0.25.1", default-features = false, features = ["std", "glyph-names"] }

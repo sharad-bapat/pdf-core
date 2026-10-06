@@ -1,11 +1,20 @@
 //! The PDF reading shared by scan-or-text, wordbox and where-are-the-regions: byte helpers, values
 //! inside dictionaries, the stream filters (Flate, LZW, RunLength, ASCII85, ASCIIHex), the object
-//! index with object streams and decryption, and the page tree. Moved from where-are-the-regions
+//! index with object streams and decryption, the page tree, and the fonts (font programs, encodings,
+//! CMaps, glyph outlines). Moved from where-are-the-regions
 //! without changing what it does; the tools used to carry a copy each.
 
 use std::collections::HashMap;
 
 pub mod crypt;
+// fonts: programs, encodings, CMaps and glyph outlines, shared by wordbox and where-are-the-regions
+pub mod cff;
+pub mod cmap;
+pub mod font;
+pub mod outline;
+pub mod tables;
+pub mod truetype;
+pub mod type1;
 
 /// How far the page tree is walked.
 pub const MAX_PAGES: usize = 2000;
