@@ -4,7 +4,7 @@ The part of reading a PDF that every tool in this series needs: finding the obje
 
 scan-or-text, wordbox and where-are-the-regions each used to carry their own copy of this code, and the copies had started to drift apart. It now lives here once and all three depend on it.
 
-## What's in it
+## Contents
 
 The object index finds every `N G obj` in the file by scanning for it, so a broken or missing cross-reference table doesn't matter. Objects packed in object streams are unpacked, and when an object is defined more than once the later definition wins, as it does in an incremental update.
 
@@ -14,9 +14,9 @@ Files that open with an empty user password are decrypted: the standard security
 
 `pages` walks the page tree in order, up to 2,000 pages, and `inherited` follows /Parent for attributes like /MediaBox and /Rotate. The rest is byte-level help for reading dictionaries and arrays: `get`, `parse_val`, `skip_val`, `string_at` and so on.
 
-## How the tools use it
+## Use
 
-Each tool refers to it by path, so clone it next to them:
+Each tool depends on it by path, so clone it next to them:
 
 ```
 pdf-core/
