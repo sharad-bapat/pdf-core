@@ -1,7 +1,7 @@
 //! The PDF reading shared by scan-or-text, wordbox and where-are-the-regions: byte helpers, values
 //! inside dictionaries, the stream filters (Flate, LZW, RunLength, ASCII85, ASCIIHex), the object
 //! index with object streams and decryption, and the page tree. Moved from where-are-the-regions
-//! without changing what it does, so the tools build on one copy (D4).
+//! without changing what it does; the tools used to carry a copy each.
 
 use std::collections::HashMap;
 
@@ -476,7 +476,7 @@ impl<'a> Pdf<'a> {
         match v { Val::Dict(d) => Some(d.clone()), Val::Ref(n) => self.dict(*n), _ => None }
     }
 
-    /// Decoded stream data (FlateDecode or unfiltered). None for unsupported filters.
+    /// The stream decoded by its whole /Filter chain. None for a filter not handled here.
     pub fn stream(&self, n: u32) -> Option<Vec<u8>> { self.decode(n, false).map(|(v, _)| v) }
 
     /// The stream decoded by every filter; with `image`, a last filter that is an image codec (DCT,
