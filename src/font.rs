@@ -558,12 +558,15 @@ pub fn glyph_unicode(name: &[u8]) -> Option<String> {
                     if let Some(c) = char::from_u32(v) { out.push(c); }
                 }
             }
-        } else if let Some(hex) = part.strip_prefix('u') {
-            if (4..=6).contains(&hex.len()) && hex.bytes().all(|b| b.is_ascii_hexdigit()) {
-                if let Some(c) = u32::from_str_radix(hex, 16).ok().and_then(char::from_u32) { out.push(c); }
-            }
+        } else if let Some(hex) = part.strip_prefix('u').filter(|h| (4..=6).contains(&h.len()) && h.bytes().all(|b| b.is_ascii_hexdigit())) {
+            if let Some(c) = u32::from_str_radix(hex, 16).ok().and_then(char::from_u32) { out.push(c); }
+        } else if let Some(t) = crate::tex::tex_unicode(part) {
+            // TeX's maths fonts name glyphs the list doesn't have (prime, epsilon1, summationdisplay)
+            out.push_str(&t);
         }
     }
+    // Adobe's private-use bracket pieces stay as they are here: the Symbol font's widths are keyed by them.
+    // Font::unicode turns them into standard pieces on the way out.
     if out.is_empty() { None } else { Some(out) }
 }
 
@@ -903,9 +906,10 @@ impl Font {
     /// Unicode text for one character code, or None when the file doesn't say.
     pub fn unicode(&self, code: u32) -> Option<String> {
         if let Some(s) = self.to_unicode.as_ref().and_then(|m| m.unicode(code)) {
-            if !s.is_empty() { return Some(s); }
+            // a ToUnicode map can hold Adobe's private-use bracket pieces too
+            if !s.is_empty() { return Some(crate::tex::fold_private(&s)); }
         }
-        if let Some(s) = self.simple.as_ref().and_then(|t| t.get(code as usize).cloned().flatten()) { return Some(s); }
+        if let Some(s) = self.simple.as_ref().and_then(|t| t.get(code as usize).cloned().flatten()) { return Some(crate::tex::fold_private(&s)); }
         let p = self.cid_program.as_ref()?;
         let cid = match &self.cid_map { Some(m) => m.cid(code)?, None => code };
         let gid = match &p.cid_to_gid { Some(v) => *v.get(cid as usize)?, None => cid as u16 };

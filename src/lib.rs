@@ -13,6 +13,7 @@ pub mod cmap;
 pub mod font;
 pub mod outline;
 pub mod tables;
+pub mod tex;
 pub mod truetype;
 pub mod type1;
 
